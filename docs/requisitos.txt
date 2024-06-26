@@ -1,0 +1,32 @@
+Requisitos
+
+Gerenciamento de usuário
+    -O sistema deve permitir que os usuários se cadastrem com nome, email e senha
+    -A senha deve ter no mínimo 8 caracteres, sendo obrigatório ter no mínimo 1 número, 
+     uma letra maiúscula, uma letra minúscula e 1 caractere especial
+    -O email deve ser um email válido
+    -O sistema deve permitir que os usuários façam login com email e senha
+
+ Gerenciamento de Contas Financeiras
+    -O sistema deve permitir que os usuários cadastrem contas financeiras 
+    -O sistema deve permitir que os usuários editem e excluam contas financeiras 
+
+Gerenciamento de Categorias
+    -O sistema deve permitir que os usuários cadastrem categorias de despesas e receitas
+    -O sistema deve permitir que os usuários editem e excluam categorias 
+
+Gerenciamento de Transações
+    -O sistema deve permitir que os usuários registrem transações financeiras com detalhes como conta, 
+    categoria, valor, tipo e descrição
+    -O valor registrado não poderá ser negativo
+    -O sistema deve permitir que os usuários editem e excluam transações financeiras
+    -O sistema deve permitir que os usuários filtrem e pesquisem transações por data, categoria e tipo 
+
+Gerenciamento de Metas Financeiras
+    -O sistema deve permitir que os usuários definam metas financeiras
+    -O sistema deve permitir que os usuários editem e excluam metas financeiras 
+
+Usabilidade
+    -O sistema deve fornecer uma interface de usuário intuitiva e fácil de usar
+    -O sistema deve ser acessível para usuários com diferentes habilidades, 
+    seguindo as melhores práticas de acessibilidade
