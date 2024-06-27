@@ -8,18 +8,15 @@ class Conta(banco.Model):
     conta_id = Column(Integer, primary_key=True, autoincrement=True)
     usuario_id = Column(Integer, ForeignKey('usuario.usuario_id'), nullable=False)
     nome_conta = Column(String(150), nullable=False)
-    saldo_inicial = Column(Double(10,2))
+    saldo_inicial = Column(Float)
     usuario = relationship("Usuario", back_populates="contas")
     transacoes = relationship("Transacao", back_populates="contas")
     
         
-    def __init__(self,nome_conta,saldo_inicial,usuario_id):
+    def __init__(self,nome_conta=None,saldo_inicial=None,usuario_id=None):
         self.usuario_id = usuario_id
         self.nome_conta = nome_conta
         self.saldo_inicial = saldo_inicial
-    
-    def __init__(self):
-        pass
     
     ## Função criada para retornar um json do modelo nas requisições
     def json(self):

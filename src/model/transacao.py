@@ -9,7 +9,7 @@ class Transacao(banco.Model):
     usuario_id = Column(Integer, ForeignKey('usuario.usuario_id'), nullable=False)
     conta_id = Column(Integer, ForeignKey('conta.conta_id'), nullable=False)
     categoria_id = Column(Integer, ForeignKey('categoria.categoria_id', ondelete='CASCADE'), nullable=False)
-    valor = Column(Double(10,2), nullable=False)
+    valor = Column(Float, nullable=False)
     tipo = Column(String(50), nullable=False)
     data = Column(DateTime, default=func.now()) 
     descricao = Column(Text, nullable=True)
@@ -19,17 +19,14 @@ class Transacao(banco.Model):
     contas = relationship("Conta", back_populates="transacoes")
     categorias = relationship("Categoria", back_populates="transacoes")
     
-    def __init__(self, usuario_id, conta_id, categoria_id, valor, tipo, descricao):
+    def __init__(self, usuario_id=None, conta_id=None, categoria_id=None, valor=None, tipo=None, descricao=None):
         self.usuario_id = usuario_id
         self.conta_id = conta_id
         self.categoria_id = categoria_id
         self.valor = valor
         self.tipo = tipo
         self.descricao = descricao
-    
-    def __init__(self):
-        pass
-    
+
     ## Função criada para retornar um json do modelo nas requisições
     def json(self):
         return {

@@ -1,9 +1,9 @@
 
-from src.controller.usuarioController import UsuarioListController,UsuarioItemController
-from src.controller.contaController import ContaListController, ContaItemController
-from src.controller.categoriaController import CategoriaListController, CategoriaItemController
-from src.controller.metaController import MetaListController, MetaItemController
-from src.controller.transacaoController import TransacaoListController, TransacaoItemController
+from src.controller.UsuarioController import UsuarioListController,UsuarioItemController
+from src.controller.ContaController import ContaListController, ContaItemController
+from src.controller.CategoriaController import CategoriaListController, CategoriaItemController
+from src.controller.MetaController import MetaListController, MetaItemController
+from src.controller.TransacaoController import TransacaoListController, TransacaoItemController
 
 
 def initialize_endpoints(api,app):

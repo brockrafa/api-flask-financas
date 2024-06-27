@@ -4,17 +4,19 @@ from src.routes.rotas import initialize_endpoints
 
 app = Flask(__name__)
 
-app.config["SQLALCHEMY_DATABASE_URI"] = 'postgresql://postgres:123@localhost:5432/db_financas'
+#app.config["SQLALCHEMY_DATABASE_URI"] = 'postgresql://postgres:123@localhost:5432/db_financas'
+app.config["SQLALCHEMY_DATABASE_URI"] = 'mysql+pymysql://root:123456@localhost:3306/db_financas'
+
 
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"]=False
 
 api = Api(app)
 
-@app.before_request
-def criarBanco():
-    # banco.drop_all()
-    # banco.create_all()
-    pass
+# @app.before_request
+# def criarBanco():
+#     banco.drop_all()
+#     banco.create_all()
+#     pass
 
 initialize_endpoints(api,app)
 

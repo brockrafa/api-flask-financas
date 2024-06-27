@@ -4,8 +4,8 @@ from src.model.usuario import Usuario
 from src.model.categoria import Categoria
 from src.model.conta import Conta
 from flask import request
-from flask import jsonify
-from marshmallow import Schema, fields, ValidationError, validate, EXCLUDE
+from marshmallow import Schema, fields, ValidationError, EXCLUDE
+from src.service.TransacaoService import *
 
 class TransacaoSchema(Schema):
     usuario_id = fields.Integer(required=True, error_messages={'invalid':"O formato do campo enviado não é valido",'required':"O campo usuario_id é obrigatório"})
@@ -22,60 +22,42 @@ class TransacaoSchema(Schema):
 class TransacaoListController(Resource):
     
     def get(self):
-        transacao = Transacao.getAll()
-        
-        resposta = []
-        for transacao in transacao:
-            resposta.append(transacao.json())
-        return resposta
+        usuarioId = None
+        if request.headers.get('Authorization'):
+            usuarioId = request.headers.get('Authorization')
+        transacoes = getTransacoesByUsuario(usuarioId)
+        return transacoes
     
     def post(self):
         try:
             TransacaoSchema().load(request.form)
-            if not Usuario().findById(request.form.get('usuario_id')) :
-                return {"mensagem":"O id de usuario informado não existe"},404
-            if not Categoria().findById(request.form.get('categoria_id')):
-                return {"mensagem":"O id de categoria informado não existe"},404
-            if not Conta().findById(request.form.get('conta_id')):
-                return {"mensagem":"O id de conta informado não existe"},404
-                
-            transacao = Transacao()
-            transacao.usuario_id = request.form.get('usuario_id')
-            transacao.conta_id = request.form.get('conta_id')
-            transacao.categoria_id = request.form.get('categoria_id')
-            transacao.valor = request.form.get('valor')
-            transacao.tipo = request.form.get('tipo')
-            transacao.descricao = request.form.get('descricao')
-            transacao.save()
+            dados = dict(request.form.items())
+            transacao = addTransacao(dados)
             return transacao.json()
         except ValidationError as err:
             return {'errors': err.messages}, 400
+        except Exception as err:
+            return {'errors': {"erro":[str(err)]}}, 400
     
 class TransacaoItemController(Resource):
     def get(self, transacao_id):
-        transacao = Transacao.findById(transacao_id)
+        transacao = getTransacaoById(transacao_id)
         if transacao:
             return transacao.json()
-        return {"msg":f"Transação: {transacao_id} não existe!"}, 404
+        return {"mensagem":f"Transação {transacao_id} não existe!"},404
     
     def put(self, transacao_id):
-        if request.form.get('usuario_id') or request.form.get('transacao_id'):
-             return {"msg":"Não é possível atualizar o usuario_id ou transacao_id"}, 401
-        transacao = Transacao.findById(transacao_id)
-        if transacao:
-            for chave, valor in request.form.items():
-                setattr(transacao, chave, valor)
-            transacao.update()
-            return {"msg": f"Transacao: {transacao_id} atualizada com sucesso!", "conta":transacao.json()},  200
-        
-        return {"msg":f"Transação: {transacao_id} não existe!"}, 404
-    
+        try:
+            TransacaoSchema().load(request.form)
+            dados = dict(request.form.items())
+            transacao = updateTransacao(transacao_id,dados)
+            return {"mensagem":"Conta atualizada com sucesso",'conta':transacao.json()}
+        except Exception as err:
+            return {'errors': {"erro":[str(err)]}}, 400
+
     def delete(self, transacao_id):
-        transacao = Transacao.findById(transacao_id)
-        if transacao:
-            transacao.delete()
-            return {"msg": f"Transação: {transacao_id} deletada com sucesso!"}, 200
-        
-        return {"msg":f"Transação: {transacao_id} não existe!"}, 404
-        
+        try: 
+            return deleteTransacao(transacao_id)
+        except Exception as err:
+            return {'errors': {"erro":[str(err)]}}, 400
         

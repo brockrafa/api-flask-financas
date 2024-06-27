@@ -1,10 +1,9 @@
 from flask_restful import Resource
-from src.model.conta import Conta
+from src.service.ContaService import *
 from flask import request
-from flask import jsonify
-from marshmallow import Schema, fields, ValidationError, validate, EXCLUDE
+from marshmallow import Schema, fields, ValidationError, EXCLUDE
 
-class CategoriaSchema(Schema):
+class ContaSchema(Schema):
     usuario_id = fields.Integer(required=True, error_messages={'invalid':"O formato do campo enviado não é valido",'required':"O campo usuario_id é obrigatório"})
     nome_conta = fields.String(required=True, error_messages={'required':"O campo nome_conta é obrigatório"})
     
@@ -14,53 +13,45 @@ class CategoriaSchema(Schema):
 class ContaListController(Resource):
     
     def get(self):
-        contas = Conta.getAll()
-        resposta = []
-        for conta in contas:
-            resposta.append(conta.json())
-        return resposta
+        usuarioId = None
+        if request.headers.get('Authorization'):
+            usuarioId = request.headers.get('Authorization')
+        contas = getContasByUsuario(usuarioId)
+        return contas
     
     def post(self):
         try:
-            CategoriaSchema().load(request.form)
-            conta = Conta() 
-            conta.usuario_id = request.form.get('usuario_id')
-            conta.nome_conta = request.form.get('nome_conta')
-            conta.saldo_inicial = 0.0
-            conta.save()
-            return {'msg':'Conta criada com sucesso','conta':conta.json()}
+            ContaSchema().load(request.form)
+            dados = dict(request.form.items())
+            conta = addConta(dados['usuario_id'],dados['nome_conta'])
+            return conta.json()
         except ValidationError as err:
             return {'errors': err.messages}, 400
+        except Exception as err:
+            return {'errors': {"erro":[str(err)]}}, 400
        
     
 class ContaItemController(Resource):
     
     def get(self, conta_id):
-        conta = Conta.findById(conta_id)
+        conta = getContaById(conta_id)
         if conta:
             return conta.json()
-        return {"msg":f"Conta número: {conta_id} não existe!"}, 404
+        return {"mensagem":f"Conta {conta_id} não existe!"},404
     
     def put(self, conta_id):
-        if request.form.get('usuario_id') or request.form.get('conta_id'):
-             return {"msg":"Não é possível atualizar o usuario_id ou conta_id"}, 401
-         
-        conta = Conta.findById(conta_id)
-       
-        if conta:
-            for chave, valor in request.form.items():
-                setattr(conta, chave, valor)
-            conta.update()
-            return {"msg": f"Conta número: {conta_id} atualizada com sucesso!", "conta":conta.json()},  200
-        
-        return {"msg":f"Conta número: {conta_id} não existe!"}, 404
+        try:
+            ContaSchema().load(request.form)
+            dados = request.form
+            conta = updateCategoria(conta_id,dados)
+            return {"mensagem":"Conta atualizada com sucesso",'conta':conta.json()}
+        except Exception as err:
+            return {'errors': {"erro":[str(err)]}}, 400
     
     def delete(self, conta_id):
-        conta = Conta.findById(conta_id)
-        if conta:
-            conta.delete()
-            return {"msg": f"Conta número: {conta_id} deletada com sucesso!"}, 200
-        
-        return {"msg":f"Conta número: {conta_id} não existe!"}, 404
+        try: 
+            return deleteConta(conta_id)
+        except Exception as err:
+            return {'errors': {"erro":[str(err)]}}, 400
         
         

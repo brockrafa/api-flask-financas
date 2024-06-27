@@ -1,10 +1,7 @@
 from flask_restful import Resource
-from src.model.categoria import Categoria
-from src.model.usuario import Usuario
 from flask import request
 from marshmallow import Schema, fields, ValidationError, EXCLUDE
 from src.service.CategoriaService import *
-from flask import jsonify
 
 
 class CategoriaSchema(Schema):
@@ -47,7 +44,7 @@ class CategoriaItemController(Resource):
             CategoriaSchema().load(request.form)
             dados = request.form
             categoria = updateCategoria(categoria_id,dados)
-            return {"mensagem":"Categoria atualizada com sucesso",'user':categoria.json()}
+            return {"mensagem":"Categoria atualizada com sucesso",'categoria':categoria.json()}
         except Exception as err:
             return {'errors': {"erro":[str(err)]}}, 400
     

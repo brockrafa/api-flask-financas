@@ -8,9 +8,9 @@ class Meta(banco.Model):
     meta_id = Column(Integer, primary_key=True, autoincrement=True)
     usuario_id = Column(Integer, ForeignKey('usuario.usuario_id'), nullable=False)
     nome_meta = Column(String(150), nullable=False)
-    valor_meta = Column(Double(10,2), nullable=False)
+    valor_meta = Column(Float, nullable=False)
     data_limite = Column(Date, nullable=False)
-    valor_acumulado = Column(Double(10,2), default=0)
+    valor_acumulado = Column(Float, default=0)
     usuario = relationship("Usuario", back_populates="metas")
     
     
