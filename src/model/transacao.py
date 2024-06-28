@@ -34,7 +34,7 @@ class Transacao(banco.Model):
             'valor':float(self.valor),
             'tipo':self.tipo,
             'data':str(self.data),
-            'descricao:':self.descricao,
+            'descricao':self.descricao,
             'usuario':{'id': self.usuario_id, 'nome':str(self.usuario.nome)},
             'conta':self.conta_id,
             'categoria':self.categorias.nome_categoria

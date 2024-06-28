@@ -6,6 +6,7 @@ from marshmallow import Schema, fields, ValidationError, EXCLUDE
 class ContaSchema(Schema):
     usuario_id = fields.Integer(required=True, error_messages={'invalid':"O formato do campo enviado não é valido",'required':"O campo usuario_id é obrigatório"})
     nome_conta = fields.String(required=True, error_messages={'required':"O campo nome_conta é obrigatório"})
+    saldo_inicial = fields.String(required=True, error_messages={'required':"O campo saldo_inicial é obrigatório"})
     
     class Meta:
         unknown = EXCLUDE  # Ignora campos não definidos no esquema
@@ -23,7 +24,7 @@ class ContaListController(Resource):
         try:
             ContaSchema().load(request.form)
             dados = dict(request.form.items())
-            conta = addConta(dados['usuario_id'],dados['nome_conta'])
+            conta = addConta(dados['usuario_id'],dados['nome_conta'],dados['saldo_inicial'])
             return conta.json()
         except ValidationError as err:
             return {'errors': err.messages}, 400

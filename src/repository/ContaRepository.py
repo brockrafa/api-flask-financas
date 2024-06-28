@@ -19,12 +19,22 @@ def get_contas_by_usuario(id):
 def get_conta_by_id(id):
     return banco.session.query(Conta).get(id)
 
-def update_conta(id,nome):
+def update_conta(id,nome,saldo):
     conta = banco.session.query(Conta).get(id)
     conta.nome_conta = nome
+    conta.saldo_inicial = saldo
     banco.session.commit()
     return conta
 
+def update_transacao_conta(transacao,conta_id):
+    conta = get_conta_by_id(conta_id)
+    if transacao.tipo == 'Despesa':
+        conta.saldo_inicial -= transacao.valor
+    else:
+        conta.saldo_inicial += transacao.valor
+        
+    return update_conta(conta.conta_id,conta.nome_conta,conta.saldo_inicial)
+    
 def delete_conta(id):
     conta = banco.session.query(Conta).get(id)
     banco.session.delete(conta)

@@ -23,7 +23,7 @@ class Conta(banco.Model):
         return {
             'conta_id':self.conta_id,
             'nome_conta':self.nome_conta,
-            'saldo_inicial':float(self.saldo_inicial),
+            'saldo_inicial':float(f"{self.saldo_inicial:.2f}"),
             'usuario':self.usuario.json()
         }
     

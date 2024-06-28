@@ -35,3 +35,5 @@ def delete_transacao(id):
     banco.session.delete(transacao)
     banco.session.commit()
 
+def get_trasacao_by_conta(id_conta):
+    return banco.session.query(banco.session.query(Transacao).filter_by(conta_id=id_conta).exists()).scalar()  

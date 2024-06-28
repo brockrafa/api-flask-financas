@@ -19,16 +19,16 @@ class Meta(banco.Model):
         self.nome_meta = nome_meta
         self.valor_meta = valor_meta
         self.data_limite = data_limite
-        valor_acumulado = valor_acumulado
+        self.valor_acumulado = valor_acumulado
     
     ## Função criada para retornar um json do modelo nas requisições
     def json(self):
         return {
             'meta_id':self.meta_id,
             'nome_meta':self.nome_meta,
-            'valor_meta':float(self.valor_meta),
+            'valor_meta':str(self.valor_meta),
             'data_limite':str(self.data_limite),
-            'valor_acumulado':float(self.valor_acumulado),
+            'valor_acumulado':str(self.valor_acumulado),
             'usuario':self.usuario.json()
         }
 

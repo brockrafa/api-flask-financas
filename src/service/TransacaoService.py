@@ -20,6 +20,9 @@ def addTransacao(dados) -> Transacao:
     tipo = dados['tipo']
     descricao = dados['descricao']
     transacao = add_transacao(usuario_id,conta_id,categoria_id,valor,tipo,descricao)
+    
+    if transacao:
+        update_transacao_conta(transacao,conta_id)
     return transacao
     
 def getTransacoesByUsuario(id):
