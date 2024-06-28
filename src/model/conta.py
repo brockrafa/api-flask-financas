@@ -26,31 +26,4 @@ class Conta(banco.Model):
             'saldo_inicial':float(self.saldo_inicial),
             'usuario':self.usuario.json()
         }
-        
-    ## Procurar modelo pelo id
-    @classmethod 
-    def findById(cls,id):
-        return cls.query.get(id)
     
-    @classmethod
-    def findByUsuarioId(cls, usuario_id):
-        return cls.query.filter_by(usuario_id=usuario_id).first()
-    
-    ## Obter todos os registros do modelo
-    @classmethod 
-    def getAll(cls):
-        return cls.query.all()
-    
-    ## Salvar modelo no banco
-    def save(self):
-        banco.session.add(self)
-        banco.session.commit()
-        
-    ## Atualizar modelo
-    def update(self):
-        banco.session.commit()
-    
-    ## Deletar modelo
-    def delete(self):
-        banco.session.delete(self)
-        banco.session.commit()

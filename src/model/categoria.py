@@ -28,28 +28,4 @@ class Categoria(banco.Model):
             'usuario':self.usuario.json()
         }
 
-    ## Procurar modelo pelo id
-    @classmethod 
-    def findById(cls,id):
-        return cls.query.get(id)
-    
-    ## Obter todos os registros do modelo
-    @classmethod 
-    def getAll(cls,id):
-        return cls.query.filter_by(usuario_id=id).all()
-    
-    ## Salvar modelo no banco
-    def save(self):
-        banco.session.add(self)
-        banco.session.commit()
-        
-    ## Atualizar modelo
-    def update(self):
-        banco.session.commit()
-    
-    ## Deletar modelo
-    def delete(self):
-        banco.session.delete(self)
-        banco.session.commit()
-   
     

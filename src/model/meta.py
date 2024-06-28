@@ -10,19 +10,16 @@ class Meta(banco.Model):
     nome_meta = Column(String(150), nullable=False)
     valor_meta = Column(Float, nullable=False)
     data_limite = Column(Date, nullable=False)
-    valor_acumulado = Column(Float, default=0)
+    valor_acumulado = Column(Float)
     usuario = relationship("Usuario", back_populates="metas")
     
     
-    def __init__(self,nome_meta, valor_meta, data_limite, valor_acumulado, usuario_id):
+    def __init__(self,usuario_id=None,nome_meta=None,valor_meta=None,data_limite=None,valor_acumulado=None):
         self.usuario_id = usuario_id
         self.nome_meta = nome_meta
         self.valor_meta = valor_meta
         self.data_limite = data_limite
         valor_acumulado = valor_acumulado
-    
-    def __init__(self):
-        pass
     
     ## Função criada para retornar um json do modelo nas requisições
     def json(self):
@@ -35,26 +32,4 @@ class Meta(banco.Model):
             'usuario':self.usuario.json()
         }
 
-    ## Procurar modelo pelo id
-    @classmethod 
-    def findById(cls,id):
-        return cls.query.get(id)
     
-    ## Obter todos os registros do modelo
-    @classmethod 
-    def getAll(cls,id):
-        return cls.query.filter_by(usuario_id=id).all()
-    
-    ## Salvar modelo no banco
-    def save(self):
-        banco.session.add(self)
-        banco.session.commit()
-        
-    ## Atualizar modelo
-    def update(self):
-        banco.session.commit()
-    
-    ## Deletar modelo
-    def delete(self):
-        banco.session.delete(self)
-        banco.session.commit()

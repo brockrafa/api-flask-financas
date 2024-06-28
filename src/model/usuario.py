@@ -33,52 +33,5 @@ class Usuario(banco.Model):
             'usuario_id':self.usuario_id,
             'nome':self.nome,
             'email':self.email,
-            'data_criacao':str(self.data_criacao),
-            'senha':self.senha
+            'data_criacao':str(self.data_criacao)
         }
-        
-    ## Salvar modelo no banco
-    def save(self):
-        banco.session.add(self)
-        banco.session.commit()
-    
-    ## Obter todos os registros do modelo   
-    @classmethod 
-    def getAll(cls):
-        return cls.query.all()
-    
-    ## Procurar modelo pelo id
-    @classmethod 
-    def findById(cls,id):
-        return cls.query.get(id)
-    
-    ## Atualizar modelo
-    def update(self, args):
-        for chave, valor in args.form.items():
-            setattr(self, chave, valor)
-       
-        banco.session.add(self)
-        banco.session.commit()
-      
-    ## Deletar modelo    
-    def delete(self):
-        banco.session.delete(self)
-        banco.session.commit()
-        
-    @classmethod
-    def findUsuarioLogin(cls,dados):
-        try:
-            email = dados['email']
-            senha = dados['senha']
-
-            # Consulta para encontrar o usuário pelo email
-            usuario = cls.query.filter_by(email=email).first()
-
-            if usuario and usuario.senha == senha:
-                return usuario
-            else:
-                return None
-
-        except SQLAlchemyError as e:
-            print(f'Erro ao buscar usuário: {str(e)}')
-            return None
